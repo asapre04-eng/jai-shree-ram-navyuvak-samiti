@@ -1,0 +1,1 @@
+import{c as o}from"./index-ColD1c9c.js";const c=[["rect",{width:"18",height:"11",x:"3",y:"11",rx:"2",ry:"2",key:"1w4ew1"}],["path",{d:"M7 11V7a5 5 0 0 1 10 0v4",key:"fwvmzm"}]],d=o("lock",c);const e=[["path",{d:"M18 6 6 18",key:"1bl5f8"}],["path",{d:"m6 6 12 12",key:"d8bk6v"}]],a=o("x",e);export{d as L,a as X};
