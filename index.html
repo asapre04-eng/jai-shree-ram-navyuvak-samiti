@@ -1,1 +1,109 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jai Shree Ram Samiti</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-orange-50"><div id="app" class="p-4"></div><script>
+// ===== DATA =====
+const STORAGE_KEY = "jsr_samiti_data";
+
+function getData(){
+  const d = localStorage.getItem(STORAGE_KEY);
+  if(d) return JSON.parse(d);
+  return {
+    anyaAay: [],
+    settings: { password: "jsr001" }
+  };
+}
+
+function saveData(data){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// ===== APP =====
+let data = getData();
+let unlocked = false;
+
+function render(){
+  const total = data.anyaAay.reduce((a,b)=>a+b.amount,0);
+
+  document.getElementById("app").innerHTML = `
+    <div class="max-w-md mx-auto">
+
+      <h1 class="text-2xl font-bold text-orange-800 mb-4">💰 Samiti App</h1>
+
+      <div class="bg-green-500 text-white p-4 rounded-xl mb-4">
+        <div>Total Income</div>
+        <div class="text-2xl font-bold">₹${total}</div>
+      </div>
+
+      <div class="mb-4">
+        ${unlocked ? `
+          <button onclick="showAdd()" class="bg-green-600 text-white px-3 py-2 rounded">Add</button>
+          <button onclick="lock()" class="bg-gray-300 px-3 py-2 rounded">Lock</button>
+        ` : `
+          <button onclick="unlock()" class="bg-orange-500 text-white px-3 py-2 rounded">Unlock</button>
+        `}
+      </div>
+
+      <div>
+        ${data.anyaAay.map(i=>`
+          <div class="bg-white p-3 rounded mb-2 flex justify-between">
+            <div>
+              <div>${i.description}</div>
+              <div class="text-xs text-gray-500">${i.date}</div>
+            </div>
+            <div>
+              ₹${i.amount}
+              ${unlocked ? `<button onclick="del('${i.id}')">❌</button>`:""}
+            </div>
+          </div>
+        `).join("")}
+      </div>
+
+    </div>
+  `;
+}
+
+function unlock(){
+  const pass = prompt("Enter password");
+  if(pass === data.settings.password){
+    unlocked = true;
+    render();
+  } else alert("Wrong password");
+}
+
+function lock(){
+  unlocked = false;
+  render();
+}
+
+function showAdd(){
+  const desc = prompt("Description");
+  const amt = prompt("Amount");
+
+  if(!desc || !amt) return;
+
+  data.anyaAay.push({
+    id: Date.now(),
+    description: desc,
+    amount: Number(amt),
+    date: new Date().toISOString().split("T")[0]
+  });
+
+  saveData(data);
+  render();
+}
+
+function del(id){
+  data.anyaAay = data.anyaAay.filter(i=>i.id != id);
+  saveData(data);
+  render();
+}
+
+render();
+</script></body>
+</html>
 
